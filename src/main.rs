@@ -1,5 +1,8 @@
 use actix_files::Files;
-use actix_web::{middleware::Logger, App, HttpServer};
+use actix_web::{
+    middleware::{self, Logger},
+    App, HttpServer,
+};
 use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
@@ -11,7 +14,7 @@ struct Opt {
     dir: String,
 }
 
-#[actix_rt::main]
+#[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init();
     let opt = Opt::from_args();
@@ -21,6 +24,11 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
+            .wrap(
+                middleware::DefaultHeaders::new()
+                    .add(("Cross-Origin-Embedder-Policy", "require-corp"))
+                    .add(("Cross-Origin-Opener-Policy", "same-origin")),
+            )
             .wrap(Logger::default())
             .service(Files::new("/", Opt::from_args().dir).index_file("index.html"))
     })
