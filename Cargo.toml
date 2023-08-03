@@ -8,6 +8,6 @@ edition = "2018"
 
 [dependencies]
 actix-files = "0.6"
-actix-web = "4.3"
+actix-web = { version = "4.3", default-features = false, features = ["macros", "compress-brotli", "compress-zstd", "cookies"] }
 env_logger = "0.7.1"
 structopt = "0.3"

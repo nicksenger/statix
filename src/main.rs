@@ -24,6 +24,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         App::new()
+            .wrap(middleware::Compress::default())
             .wrap(
                 middleware::DefaultHeaders::new()
                     .add(("Cross-Origin-Embedder-Policy", "require-corp"))
